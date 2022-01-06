@@ -337,11 +337,12 @@
 </div>
 
 <style>
-  :global(html, body) {
+  :global(html, body, #svelte) {
     height: 100%;
     width: 100%;
     padding: 0;
     margin: 0;
+    overflow: hidden;
   }
 
   :global(body) {
@@ -360,12 +361,9 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  :global(#svelte) {
-    height: 100%;
-  }
-
   .container {
     display: flex;
+    position: relative;
     height: 100%;
     width: 100%;
     overflow: hidden;

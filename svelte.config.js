@@ -14,7 +14,7 @@ const config = {
     target: '#svelte',
 
     paths: {
-      base: '/stock-app-home-screen'
+      base: process.env.NODE_ENV === 'development' ? '' : '/stock-app-home-screen'
     }
   }
 };
