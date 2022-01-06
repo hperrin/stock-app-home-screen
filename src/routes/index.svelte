@@ -44,6 +44,17 @@
     onClick?: (index: number) => void;
   };
 
+  const addMoveApp = (app: App): App => ({
+    ...app,
+    onClick: (i: number) => {
+      if (moveApps && i < apps.length - 1) {
+        const app = apps.splice(i, 1)[0];
+        apps.splice(i + 1, 0, app);
+        apps = apps;
+      }
+    }
+  });
+
   let apps: App[] = [
     {
       name: 'Vingus',
@@ -191,16 +202,7 @@
     }
   ]
     .sort((a, b) => a.name.localeCompare(b.name))
-    .map((app) => ({
-      ...app,
-      onClick: (i) => {
-        if (moveApps && i < apps.length - 1) {
-          const app = apps.splice(i, 1)[0];
-          apps.splice(i + 1, 0, app);
-          apps = apps;
-        }
-      }
-    }));
+    .map(addMoveApp);
 
   const removedApps: App[] = [
     {
@@ -227,7 +229,7 @@
       bgColor: '#E2E2EE',
       color: '#3B3B46'
     }
-  ];
+  ].map(addMoveApp);
 
   const tray: App[] = [
     {
@@ -293,7 +295,7 @@
   <div class="cloud cloud-right" />
 
   <div class="screen" class:apps-visible={appsVisible}>
-    {#each apps as app, i}
+    {#each apps as app, i (app.name)}
       <div class="app" on:click={() => app.onClick && app.onClick(i)}>
         <div
           class="logo"
@@ -324,7 +326,7 @@
   </div>
 
   <div class="tray">
-    {#each tray as app, i}
+    {#each tray as app, i (app.name)}
       <div class="app" on:click={() => app.onClick && app.onClick(i)}>
         <div
           class="logo"

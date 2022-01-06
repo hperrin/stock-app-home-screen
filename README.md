@@ -19,7 +19,7 @@ As much as legally possible, I'm placing this in the public domain. You are allo
 
 - Click an app in the grid to move it right.
 - Click the Phone app to remove an app from the end of the grid.
-- Click the Messages app to add an app to the end of the grid.
+- Click the Messages app to add an app to the end of the grid (there are even some more apps that aren't shown by default).
 - Click the Settings app to switch to the empty page (hide the apps in the grid).
 - Click the Camera app to turn off the app move feature (so you can click apps without them moving).
 
