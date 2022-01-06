@@ -41,36 +41,8 @@
     bgColor?: string;
     color?: string;
     size?: number;
-    onClick?: () => void;
+    onClick?: (index: number) => void;
   };
-
-  // Additional apps if you need different ones / more:
-  const _unusedApps: App[] = [
-    {
-      name: 'Scralb Immel',
-      icon: mdiArrowDecisionOutline,
-      bgColor: '#D83999',
-      color: '#D9D700'
-    },
-    {
-      name: 'Echo InCotro',
-      icon: mdiAudioVideo,
-      bgColor: '#000',
-      color: '#1E1597'
-    },
-    {
-      name: 'Chefrom',
-      icon: mdiAnvil,
-      bgColor: '#426BC2',
-      color: '#C38BE5'
-    },
-    {
-      name: 'Flashlight',
-      icon: mdiFlashlight,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
-    }
-  ];
 
   let apps: App[] = [
     {
@@ -124,44 +96,44 @@
     {
       name: 'Calendar',
       icon: mdiCalendar,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
     },
     {
       name: 'Email',
       icon: mdiEmail,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
     },
     {
       name: 'Notes',
       icon: mdiNote,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
     },
     {
-      name: 'Settings',
-      icon: mdiCog,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      name: 'Kangroo',
+      icon: mdiCar,
+      bgColor: '#FF6E44',
+      color: '#FFF'
     },
     {
       name: 'Clock',
       icon: mdiClock,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
     },
     {
-      name: 'Alarms',
+      name: 'Alarm',
       icon: mdiAlarm,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
     },
     {
       name: 'Calculator',
       icon: mdiCalculator,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE'
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
     },
     {
       name: 'Wenflick',
@@ -217,14 +189,51 @@
       bgColor: '#B9F1B9',
       color: '#004C00'
     }
-  ].sort((a, b) => a.name.localeCompare(b.name));
-  const removedApps: App[] = [];
+  ]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((app) => ({
+      ...app,
+      onClick: (i) => {
+        if (moveApps && i < apps.length - 1) {
+          const app = apps.splice(i, 1)[0];
+          apps.splice(i + 1, 0, app);
+          apps = apps;
+        }
+      }
+    }));
+
+  const removedApps: App[] = [
+    {
+      name: 'Scralb Immel',
+      icon: mdiArrowDecisionOutline,
+      bgColor: '#D83999',
+      color: '#D9D700'
+    },
+    {
+      name: 'Echo InCotro',
+      icon: mdiAudioVideo,
+      bgColor: '#000',
+      color: '#1E1597'
+    },
+    {
+      name: 'Chefrom',
+      icon: mdiAnvil,
+      bgColor: '#426BC2',
+      color: '#C38BE5'
+    },
+    {
+      name: 'Flashlight',
+      icon: mdiFlashlight,
+      bgColor: '#E2E2EE',
+      color: '#3B3B46'
+    }
+  ];
 
   const tray: App[] = [
     {
       name: 'Phone',
       icon: mdiPhone,
-      bgColor: '#3B3B46',
+      bgColor: '#50C113',
       color: '#E2E2EE',
       onClick: () => {
         if (apps.length) {
@@ -236,7 +245,7 @@
     {
       name: 'Messages',
       icon: mdiChat,
-      bgColor: '#3B3B46',
+      bgColor: '#50C113',
       color: '#E2E2EE',
       onClick: () => {
         if (removedApps.length) {
@@ -246,36 +255,37 @@
       }
     },
     {
-      name: 'Kangroo',
-      icon: mdiCar,
-      bgColor: '#FF6E44',
-      color: '#FFF',
+      name: 'Settings',
+      icon: mdiCog,
+      bgColor: '#E2E2EE',
+      color: '#3B3B46',
       onClick: () => (appsVisible = !appsVisible)
     },
     {
       name: 'Camera',
       icon: mdiCamera,
-      bgColor: '#3B3B46',
-      color: '#E2E2EE',
-      onClick: toggleFullscreen
+      bgColor: '#E2E2EE',
+      color: '#3B3B46',
+      onClick: () => (moveApps = !moveApps)
     }
   ];
 
   let appsVisible = true;
+  let moveApps = true;
 
-  async function toggleFullscreen() {
-    if (document.fullscreenElement) {
-      document.exitFullscreen();
-    } else {
-      try {
-        await document.documentElement.requestFullscreen({
-          navigationUI: 'hide'
-        });
-      } catch (e: any) {
-        // ignore error
-      }
-    }
-  }
+  // async function toggleFullscreen() {
+  //   if (document.fullscreenElement) {
+  //     document.exitFullscreen();
+  //   } else {
+  //     try {
+  //       await document.documentElement.requestFullscreen({
+  //         navigationUI: 'hide'
+  //       });
+  //     } catch (e: any) {
+  //       // ignore error
+  //     }
+  //   }
+  // }
 </script>
 
 <div class="container">
@@ -283,8 +293,8 @@
   <div class="cloud cloud-right" />
 
   <div class="screen" class:apps-visible={appsVisible}>
-    {#each apps as app}
-      <div class="app" on:click={app.onClick || (() => {})}>
+    {#each apps as app, i}
+      <div class="app" on:click={() => app.onClick && app.onClick(i)}>
         <div
           class="logo"
           style="{app.bgColor ? `background-color: ${app.bgColor};` : ''} {app.color
@@ -314,8 +324,8 @@
   </div>
 
   <div class="tray">
-    {#each tray as app}
-      <div class="app" on:click={app.onClick || (() => {})}>
+    {#each tray as app, i}
+      <div class="app" on:click={() => app.onClick && app.onClick(i)}>
         <div
           class="logo"
           style="{app.bgColor ? `background-color: ${app.bgColor};` : ''} {app.color
@@ -391,7 +401,7 @@
     bottom: 4px;
     left: 4px;
     background-color: #000;
-    z-index: -1;
+    z-index: 0;
     border-radius: 22px;
     opacity: 0.2;
   }
@@ -434,6 +444,7 @@
 
   .tray .app {
     margin-bottom: 22px;
+    z-index: 1;
   }
 
   .logo {
