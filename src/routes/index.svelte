@@ -18,7 +18,7 @@
 		mdiNote,
 		mdiCog,
 		mdiPhone,
-		mdiMessage,
+		mdiChat,
 		mdiClock,
 		mdiAlarm,
 		mdiCalculator,
@@ -41,6 +41,7 @@
 		bgColor?: string;
 		color?: string;
 		size?: number;
+		onClick?: () => void;
 	};
 
 	// Additional apps if you need different ones / more:
@@ -71,7 +72,7 @@
 		}
 	];
 
-	const apps: App[] = [
+	let apps: App[] = [
 		{
 			name: 'Vingus',
 			icon: mdiBasket,
@@ -217,33 +218,50 @@
 			color: '#004C00'
 		}
 	].sort((a, b) => a.name.localeCompare(b.name));
+	const removedApps: App[] = [];
 
 	const tray: App[] = [
 		{
 			name: 'Phone',
 			icon: mdiPhone,
 			bgColor: '#3B3B46',
-			color: '#E2E2EE'
+			color: '#E2E2EE',
+			onClick: () => {
+				if (apps.length) {
+					removedApps.push(apps.splice(apps.length - 1, 1)[0]);
+					apps = apps;
+				}
+			}
 		},
 		{
 			name: 'Messages',
-			icon: mdiMessage,
+			icon: mdiChat,
 			bgColor: '#3B3B46',
-			color: '#E2E2EE'
+			color: '#E2E2EE',
+			onClick: () => {
+				if (removedApps.length) {
+					apps.push(removedApps.splice(removedApps.length - 1, 1)[0]);
+					apps = apps;
+				}
+			}
 		},
 		{
 			name: 'Kangroo',
 			icon: mdiCar,
 			bgColor: '#FF6E44',
-			color: '#FFF'
+			color: '#FFF',
+			onClick: () => (appsVisible = !appsVisible)
 		},
 		{
 			name: 'Camera',
 			icon: mdiCamera,
 			bgColor: '#3B3B46',
-			color: '#E2E2EE'
+			color: '#E2E2EE',
+			onClick: toggleFullscreen
 		}
 	];
+
+	let appsVisible = true;
 
 	async function toggleFullscreen() {
 		if (document.fullscreenElement) {
@@ -261,9 +279,12 @@
 </script>
 
 <div class="container">
-	<div class="screen">
+	<div class="cloud cloud-left" />
+	<div class="cloud cloud-right" />
+
+	<div class="screen" class:apps-visible={appsVisible}>
 		{#each apps as app}
-			<div class="app" on:click={toggleFullscreen}>
+			<div class="app" on:click={app.onClick || (() => {})}>
 				<div
 					class="logo"
 					style="{app.bgColor ? `background-color: ${app.bgColor};` : ''} {app.color
@@ -283,7 +304,7 @@
 		{/each}
 	</div>
 
-	<div class="pager">
+	<div class="pager" class:apps-visible={appsVisible}>
 		<svg viewBox="0 0 24 24">
 			<path fill="currentColor" d={mdiCircleSmall} />
 		</svg>
@@ -294,7 +315,7 @@
 
 	<div class="tray">
 		{#each tray as app}
-			<div class="app" on:click={toggleFullscreen}>
+			<div class="app" on:click={app.onClick || (() => {})}>
 				<div
 					class="logo"
 					style="{app.bgColor ? `background-color: ${app.bgColor};` : ''} {app.color
@@ -324,10 +345,15 @@
 	}
 
 	:global(body) {
-		background: rgb(5, 0, 91);
-		background: linear-gradient(rgba(9, 121, 83, 1), rgba(9, 121, 83, 1)),
-			linear-gradient(336deg, rgba(0, 212, 255, 1), rgba(5, 0, 91, 1) 25%, transparent 50%),
-			linear-gradient(50deg, rgba(5, 0, 91, 1), rgba(5, 0, 91, 1) 25%, transparent 50%);
+		background: rgba(76, 63, 145);
+		background: linear-gradient(
+			rgba(76, 63, 145, 1),
+			rgba(76, 63, 145, 1) 60%,
+			rgba(145, 69, 182, 1) 70%,
+			rgba(185, 88, 165, 1) 80%,
+			rgba(255, 86, 119, 1) 90%,
+			rgba(240, 210, 144, 1) 100%
+		);
 		background-blend-mode: screen;
 		background-size: cover;
 		color: white;
@@ -341,9 +367,11 @@
 	.container {
 		display: flex;
 		height: 100%;
+		width: 100%;
+		overflow: hidden;
 		flex-direction: column;
 		justify-content: space-between;
-		padding: 12px 0 16px;
+		padding: 0 0 16px;
 		box-sizing: border-box;
 	}
 
@@ -371,15 +399,22 @@
 	}
 
 	.pager {
-		text-align: center;
+		flex-grow: 1;
+		display: flex;
+		justify-content: center;
+		align-items: flex-end;
+		margin-bottom: 16px;
 	}
 	.pager svg {
 		height: 14px;
 		width: 14px;
-		transform: scale(2.5);
+		transform: scale(3);
 		opacity: 0.4;
 	}
-	.pager svg:first-child {
+	.pager.apps-visible svg:first-child {
+		opacity: 0.9;
+	}
+	.pager:not(.apps-visible) svg:last-child {
 		opacity: 0.9;
 	}
 
@@ -390,6 +425,13 @@
 		flex-wrap: wrap;
 		width: calc(100% / 4);
 		margin-top: 22px;
+	}
+
+	.screen .app {
+		visibility: hidden;
+	}
+	.screen.apps-visible .app {
+		visibility: visible;
 	}
 
 	.tray .app {
@@ -427,5 +469,44 @@
 
 	.tray .name {
 		display: none;
+	}
+
+	.cloud {
+		position: absolute;
+		background: linear-gradient(rgb(10, 25, 49), rgb(10, 25, 49) 85%, rgba(243, 149, 13, 1));
+		box-shadow: 0 4px 2px 2px rgba(244, 225, 133, 0.8);
+		width: 160px;
+		height: 45px;
+		border-radius: 45px;
+		transform: scale(2);
+		filter: blur(1px);
+	}
+	.cloud::after,
+	.cloud::before {
+		content: ' ';
+		display: block;
+		position: absolute;
+		background: inherit;
+		border-radius: 100%;
+	}
+	.cloud::after {
+		width: 60px;
+		height: 60px;
+		top: -25px;
+		left: 15px;
+	}
+	.cloud::before {
+		width: 90px;
+		height: 90px;
+		top: -45px;
+		left: 55px;
+	}
+	.cloud.cloud-left {
+		left: 20px;
+		top: 125px;
+	}
+	.cloud.cloud-right {
+		right: 40px;
+		top: 155px;
 	}
 </style>
