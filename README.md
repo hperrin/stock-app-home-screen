@@ -3,7 +3,7 @@
 A "home screen" full of fake apps to use for stock photos.
 
 <div align="center">
-  <img src="https://pbs.twimg.com/media/FIZE9Y7UUAQZCIX?format=png" alt="screenshot" height="600" width="auto" />
+  <img src="static/screenshot.png" alt="screenshot" height="600" width="auto" />
 </div>
 
 # Usage
