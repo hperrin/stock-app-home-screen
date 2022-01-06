@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "Stock App Home Screen",
+  "short_name": "Stock Home",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#4C3F91",
+  "theme_color": "#4C3F91",
+  "description": "A \"home screen\" full of fake apps to use for stock photos.",
+  "orientation": "portrait"
+}
